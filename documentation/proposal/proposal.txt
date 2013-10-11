@@ -1,5 +1,14 @@
-Bridge health monitoring
+Bridge Health Monitoring
+Students: Hussam AlShammary Xiao Chuan Ont Chris Palmer
+Advisor: Siheng Chen
 
-Why it's important. A bridge fell down once, shouldn't happen again.
+Bridge health monitoring is an important public safety concern. Infrastructure continues to age and as it ages repairs are necessary. Recently the I-35 bridge collapsed in Minneapolis killing 13 and injuring 145. The topic this project will address is to classify whether or not there is structural damage to the bridge and further what type of structural damage it is. In a country such as the US there are approximately 600,000 bridges, 1 in 9 are structurally deficient. 
+
+The novelty of the proposed technique lies in the collection of bridge structural health information. The price of installation, maintenance, and equipment for current bridge monitoring technologies is prohibitive. In this project instead of installing this equipment on the bridge, accelerometers are installed on the axels of a car. Three accelerometers on each axle, velocity, and temperature construct the data from which features are generated. An example structure has been setup in a lab and over 3,000 experiments have been run. More experiments can be run if necessary for this project, though this will most likely not be necessary. 
+
+The features, in our project, will be wavelet representations of the signal. Once features are generated, certain features are selected based upon their variability (PCA). After feature selection a classifier trains on labeled as well as non-labeled data. To train on unlabeled data a clustering technique can be used such as k-means. A linear SVM classification algorithm has been used so far. A setup using Coiflet wavelet filters, PCA, and SVM have been used to get up to 99.9% classification accuracy. 
+
+For this project we plan to use the existing data to determine how classification accuracy is dependent on Temperature. There are multiple temperature scenarios for the experiments. For each one we will train a MRC classifier on each temperature range. This will indicate to what extent the bridge dampens incoming signals based on temperature. After running this simple experiment we plan on implementing an algorithm to prune the Coiflet filter so that it only processes what time/frequency resolutions are needed. This will reduce the dimensionality of the PCA operation which improves the speed of the experiments and makes them more practical in the real world. If we manage to successfully complete the previous goals, we will attempt to improve the accuracy of the classification at high speeds. This may be done using up sampling or downsampling so that the different experiments could be run together, this than can be compared against using a modified dynamic time warping algorithm to make the data comparable on the time axis. 
 
 
+http://www.infrastructurereportcard.org/bridges/
