@@ -1,4 +1,5 @@
 %% ENVIRONMENT INITIALIZATION
+
 clear all; close all;clc;
 feature_type = 'haar';
 classifier_type = 'svm';
