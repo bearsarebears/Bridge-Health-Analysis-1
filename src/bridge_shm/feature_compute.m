@@ -1,4 +1,4 @@
-function [ rfeatures ] = feature_compute( rdata,f0,f1,f2,f3,feature_type)
+function [ rfeatures ] = feature_compute( rdata,f0,f1,f2,f3,feature_type,depth)
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
     
@@ -18,7 +18,7 @@ function [ rfeatures ] = feature_compute( rdata,f0,f1,f2,f3,feature_type)
     concat_features = zeros(n3*run_length,N_runs);
     for w = 1:numel(f0); 
         a = f0{w}; 
-        for y = 1:numel(f1); b = f1{y,1}; 
+        for y = 1:numel(f1); b = f1{y}; 
             for z = 1:numel(f2); 
                 c = f2{z}; 
                 for i= 1:numel(f3);
@@ -26,7 +26,6 @@ function [ rfeatures ] = feature_compute( rdata,f0,f1,f2,f3,feature_type)
                     index = (i-1)*run_length + 1: i*run_length;
                     switch feature_type
                         case 'haar'
-                        depth = 10;
                         tmp = rdata.(a).(b).(c).(d);
                         for j = 1:N_runs
                             concat_features(index,j)= wpcoef(wpdec(tmp(j,:),depth,feature_type));
