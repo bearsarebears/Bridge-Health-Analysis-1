@@ -1,15 +1,16 @@
-function [ models ] = train(rfeatures,f0,f1,f2,classifier,ind)
+function [ model ] = train(rfeatures,labels,classifier)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
-    [class_features, class_labels] = load_matrix(rfeatures,f0,f1,f2,ind);
-    n_classes = numel(f0);
-    models = cell(n_classes,1);
-    for i = 1:n_classes
-        switch classifier
-            case 'svm' 
-                label = (class_labels == i);
-                models{i} = svmtrain(class_features',label); 
-        end
+    switch classifier
+        case 'svm' 
+            kernel = 'poly';
+            isotropic = 0;
+            C = 20;
+            model.p1 = 1;
+            model.kernel = 'linear';
+            [model.X,model.A,model.B] = normsv(rfeatures,kernel,isotropic);
+            [model.b,model.alpha,model.Ynew,model.cl] = ...
+                multiclass(model.X,labels,model.kernel,p1,C,'');
     end
 end
 

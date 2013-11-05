@@ -1,9 +1,6 @@
 function [ rfeatures ] = feature_compute( rdata,f0,f1,f2,f3,feature_type,depth)
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
-    
-    [N_runs,run_length] = size(rdata.(f0{1}).(f1{1}).(f2{1}).(f3{1}));
-
     n0 = numel(f0);
     n1 = numel(f1);
     n2 = numel(f2);
@@ -14,26 +11,24 @@ function [ rfeatures ] = feature_compute( rdata,f0,f1,f2,f3,feature_type,depth)
         rfeatures = [];
         return;
     end
-    
-    concat_features = zeros(n3*run_length,N_runs);
-    for w = 1:numel(f0); 
-        a = f0{w}; 
-        for y = 1:numel(f1); b = f1{y}; 
-            for z = 1:numel(f2); 
-                c = f2{z}; 
-                for i= 1:numel(f3);
-                    d = f3{i};
-                    index = (i-1)*run_length + 1: i*run_length;
+    for a = f0
+        for b = f1
+            for c = f2
+                for d= f3
                     switch feature_type
-                        case 'haar'
-                        tmp = rdata.(a).(b).(c).(d);
-                        for j = 1:N_runs
-                            concat_features(index,j)= wpcoef(wpdec(tmp(j,:),depth,feature_type));
+                    case 'haar'
+                        tmp = rdata.(a{1}).(b{1}).(c{1}).(d{1});
+                        n_runs = size(tmp,2);
+                        concat = cell(n_runs,1);
+                        for i = 1:n_runs
+                            concat{i} = ...
+                                wpdec(tmp(:,i),depth,feature_type);
                         end
+                        rfeatures.(a).(b).(c).(d) = concat;
+                        clear concat;
                     end
                 end
-                rfeatures.(a).(b).(c) = concat_features;
-            end;
+            end
         end;
     end;
 end
