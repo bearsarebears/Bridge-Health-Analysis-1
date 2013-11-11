@@ -14,20 +14,36 @@ function [ rfeatures ] = feature_compute( rdata,f0,f1,f2,f3,feature_type,depth)
     for a = f0
         for b = f1
             for c = f2
+		tmp = rdata.(a{1}).(b{1}).(c{1}).(f3{1});
+               	[n_runs,run_len]= size(tmp);
+		if strcmp(feature_type,'haar packet')
+			run_len = numel(wpcoef(wpdec(tmp(1,:),depth,feature_type)));
+		else if strcmp(feature_type,'haar wavelet')
+			run_len = numel(wavedec(tmp(1,:),depth,'haar'));
+		end
+		rfeatures.(a{1}).(b{1}).(c{1}).wcoef = sparse(n3*run_len,n_runs);
+		count = 0;	
                 for d= f3
+		    count = count + 1;
                     switch feature_type
-                    case 'haar'
-                        tmp = rdata.(a{1}).(b{1}).(c{1}).(d{1});
-                        n_runs = size(tmp,2);
-                        concat = cell(n_runs,1);
+		    % haar wavelet decomposition
+                    case 'haar packet'
+			tmp = rdata.(a{1}).(b{1}).(c{1}).(d{1}); 
                         for i = 1:n_runs
-                            concat{i} = ...
-                                wpdec(tmp(:,i),depth,feature_type);
+				[rfeatures.(a{1}).(b{1}).(c{1}).wcoef((count-1)*run_len+1:count*run_len,i)] = ...
+                                	wpcoef(wpdec(tmp(i,:),depth,'haar'));
                         end
-                        rfeatures.(a).(b).(c).(d) = concat;
-                        clear concat;
+			case 'haar wavelet'
+			tmp = rdata.(a{1}).(b{1}).(c{1}).(d{1}); 
+                        for i = 1:n_runs
+				[rfeatures.(a{1}).(b{1}).(c{1}).wcoef((count-1)*run_len+1:count*run_len,i), ~] = ...
+                                	wavedec(tmp(i,:),depth,'haar');
+                        end
+
+			clear tmp;
                     end
                 end
+			
             end
         end;
     end;
