@@ -18,7 +18,7 @@ function [ rfeatures ] = feature_compute( rdata,f0,f1,f2,f3,feature_type)
     concat_features = zeros(n3*run_length,N_runs);
     for w = 1:numel(f0); 
         a = f0{w}; 
-        for y = 1:numel(f1); b = f1{y,1}; 
+        for y = 1:numel(f1); b = f1{y}; 
             for z = 1:numel(f2); 
                 c = f2{z}; 
                 for i= 1:numel(f3);
