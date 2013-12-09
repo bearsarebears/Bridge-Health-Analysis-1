@@ -1,18 +1,23 @@
-function [ experiments ] = experiment(features,labels,K,classifier )
+function [ experiments ] = experiment(features,labels,K,feature_type,classifier )
     tic;
+    [n_runs, run_len] = size(features);
     results = cell(K,1);
-    folds = crossvalind('Kfold',size(features,2),K);
+    folds = crossvalind('Kfold',n_runs,K);
     times.train_times = zeros(K,1);
     times.test_times = zeros(K,1);
     tic;
     for k = 1:K
-        tic;
-	model = train(features(:,folds ~= k),labels(folds~=k),classifier);
+	[feature_type.model,feature_train] = feature_selection(features(folds~=k,:),feature_type,1);
+	[~,feature_test] = feature_selection(features(folds==k,:),feature_type,0);
+	tic;
+	model = train(feature_train,labels(folds~=k),classifier);
         times.train_times(k) = toc;
         tic;
         [results{k}.confusion, results{k}.error] = ...
-            test(model,features(:,folds==k),labels(folds==k),classifier);
+            test(model,feature_test,labels(folds==k),classifier);
         times.test_times(k) = toc;
+	clear model;
+	'one eval'
     end
     times.tottal_tt_end = toc;
     times.experiment_time = toc;
